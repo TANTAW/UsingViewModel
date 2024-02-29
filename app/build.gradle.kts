@@ -1,11 +1,14 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.skills.example.usingviewmodel"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.skills.example.usingviewmodel"
@@ -17,6 +20,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures{
+        dataBinding = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -33,6 +39,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    // when their is a conflict of jvm target 1.8 and in another location 17 we us kotlin compile to unify jvmTarget
+    tasks{
+        withType<KotlinCompile>{
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
 }
 
 dependencies {
@@ -44,4 +59,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+
 }
