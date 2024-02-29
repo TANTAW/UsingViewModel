@@ -1,5 +1,6 @@
 package com.skills.example.usingviewmodel
 
+import android.content.pm.ActivityInfo
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -32,4 +33,36 @@ class MainActivityTest {
         count++
         onView(withId(R.id.tv_counter)).check(matches(withText("$count")))
     }
+
+    @Test
+    fun checkOnConfigurationChangedValueBecomeZero() {
+        onView(withId(R.id.btn_increase)).perform(click())
+        onView(withId(R.id.btn_increase)).perform(click())
+        onView(withId(R.id.btn_increase)).perform(click())
+
+        onView(withId(R.id.tv_counter)).check(matches(withText("3")))
+
+        activityRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        onView(withId(R.id.tv_counter)).check(matches(withText("0")))
+
+    }
+
+
+    @Test
+    fun checkOnConfigurationChangedValueStayTheSame() {
+        onView(withId(R.id.btn_increase)).perform(click())
+        onView(withId(R.id.btn_increase)).perform(click())
+        onView(withId(R.id.btn_increase)).perform(click())
+
+        onView(withId(R.id.tv_counter)).check(matches(withText("3")))
+
+        activityRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        onView(withId(R.id.tv_counter)).check(matches(withText("3")))
+
+    }
+
 }
